@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block content%}
+<div class='row'>
+    <div class='col s6'>
+        <div class='card'>
+            <div class='card-content'>
+                <span class='card-title'>{{ game.name }}</span>
+                <p>Genre: {{ game.genre }}</p>
+                <p>Review: {{ game.review }}</p>
+                <p>Favorite Character: {{game.character }}</p>
+            </div>    
+            <div class='card-action'>
+                <a class='red-text' href="{% url 'games_update' game.id %}">Edit</a>
+                <a class='red-text' href="{% url 'games_delete' game.id %}">Delete</a>
+            </div>
+        </div>
+        {% for photo in game.photo_set.all %}
+            <img class='responsive-img card-panel' src='{{photo.url}}'>
+        {% empty %}
+            <div class='card-panel teal-text center-align'>No Photos Uploaded</div>
+        {% endfor %}
+    <form action="{% url 'add_photo' game.id %}" enctype='multipart/form-data' method='post' class='card-panel'>
+        {% csrf_token %}
+        <input type='file' name='photo-file'>
+        <br><br>
+        <input type='submit' class='btn teal accent-3' value='Upload Photo'>
+    </form>
+    </div>
+<div class='col s6'>
+<form action="{% url 'add_rating' game.id %}" method='post'>
+    {% csrf_token %}
+    {{ rating_form.as_p }}
+    <input type='submit' class='btn teal accent-3' value='Add Rating'>
+</form>
+<table class='striped'>
+    <thead>
+        <tr><th>Date</th><th>Rating</th></tr>
+    </thead>
+        <tbody>
+            {% for rating in game.rating_set.all %}
+            <tr>
+                <td>{{rating.date}}</td>
+                <td>{{rating.get_rating_display}}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+</div>
+
+<hr>
+<div class='row'>
+    <div class='col s6'>
+        <h3>{{game.name}}'s Consoles</h3>
+        {% if game.consoles.count %}
+            {% for console in game.consoles.all %}
+            <div class='card'>
+                <div class='card-content'>
+                    <span class='card-title'>
+                    {{console.name}}</span>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <h5>No Consoles</h5>
+        {% endif %}
+    </div>
+<div class='col s6'>
+    <h3>Available Consoles</h3>
+    {% if consoles.count %}
+        {% for console in consoles.all%}
+            <div class='card'>
+                <div class='card-content'>
+                    <span class='card-title'>{{console.name}}
+                    </span>
+                </div>
+                <div class='card-action'>
+                    <form action="{% url 'assoc_console' game.id console.id %}" method='post'>
+                        {% csrf_token %}
+                        <button type='submit' class='btn teal accent-3'>Add</button>
+                    </form>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <h5>{{game.name}} Has all the consoles</h5>
+    {% endif %}
+</div>
+</div>
+                
+<script>
+    var dateEl = document.getElementById('id_date');
+    M.Datepicker.init(dateEl, {
+        format: 'yyyy-mm-dd',
+        defaultDate: new Date(),
+        setDefaultDate: true,
+        autoClose: true
+});
+    var selectEl = document.getElementById('id_rating');
+    M.FormSelect.init(selectEl);
+</script>
+
+
+{% endblock %}

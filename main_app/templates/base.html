@@ -1,0 +1,46 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Game Collector</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <!-- <link rel="stylesheet" type="text/css" href="{% static 'css/semantic.css' %}"> -->
+  <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</head>
+<body>
+  <header class='navbar-fixed'>
+    <nav>
+      <div class='nav-wrapper pink accent-3'>
+      <ul>
+          <li><a class='waves-effect waves-light teal accent-3 btn-large black-text' href="{% url 'home' %}">GameCollector</a></li>
+      </ul>
+      <ul class='middle'>
+          <li><a class='waves-effect waves-light teal accent-3 btn-small black-text' href="{% url 'about' %}">About</a></li>
+            {% if user.is_authenticated %}
+              <li><a class='waves-effect waves-light teal accent-3 btn-small black-text' href="{% url 'consoles_create' %}">Add Console</a></li>
+              <li><a class='waves-effect waves-light teal accent-3 btn-small black-text' href="{% url 'consoles_index' %}">View All Consoles</a></li>
+              <li><a class='waves-effect waves-light teal accent-3 btn-small black-text' href="{% url 'games_create' %}">Add A Game</a></li>
+              <li><a class='waves-effect waves-light teal accent-3 btn-small black-text' href="{% url 'index' %}">View All My Games</a></li>
+              <li><a class='waves-effect waves-light teal accent-3 btn-small black-text' href="{% url 'logout' %}">Log Out</a></li>
+            {% else %}
+              <li><a class='waves-effect waves-light teal accent-3 btn-small black-text' href="{% url 'signup' %}">Sign Up</a></li>
+              <li><a class='waves-effect waves-light teal accent-3 btn-small black-text' href="{% url 'login' %}">Login In</a></li>
+            {% endif %}
+          </ul>
+      </div>
+    </nav>
+  </header>
+  <main class='card-panel cyan accent-2'>
+    {% block content %}
+    {% endblock %}
+  </main>
+  <footer class='page-footer pink accent-3'>
+    <div class='right'>All Rights Reserved, 2019 Game Collector </div>
+  </footer>
+</body>
+</html>
